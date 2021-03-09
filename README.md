@@ -1,2 +1,2 @@
-# dos-calc
-Experiment Integrating DOS into a CICD pipeline  
+# dos-pascal
+Experiments with Pascal Development under DOS. Targetting Turbo Pascal 5.5 & DOSBox.

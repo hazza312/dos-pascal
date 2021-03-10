@@ -1,21 +1,23 @@
 program Sort;
 type
-  TIntArray = array[0..3] of integer;
+  TIntArray = array[0..100] of integer;
 
 
-procedure BubbleSort(A: array of integer);
+procedure BubbleSort(var A: TIntArray);
 var
   i, j, tmp: integer;
 
 begin
   for i := Low(A) to High(A) do
-    for j := Low(A) to High(A) -1 do
-      if A[j] < A[j+1] then
+  begin
+    for j := Low(A) to High(A) - 1 do
+      if A[j] > A[j+1] then
       begin
-        tmp := A[i];
-        A[i] := A[j];
-        A[j] := tmp;
+        tmp := A[j];
+        A[j] := A[j+1];
+        A[j+1] := tmp;
       end;
+  end;
 end;
 
 
@@ -83,14 +85,13 @@ procedure QuickSort(var A: TIntArray);
     pivot, tmp, i, j: integer;
 
   begin
-    writeln(lo, ' ', hi);
     pivot := A[(lo + hi) div 2];
     i := lo-1; j := hi+1;
 
     while true do
     begin
-      repeat i := i + 1 until i > pivot;
-      repeat j := j - 1 until j < pivot;
+      repeat i := i + 1 until A[i] >= pivot;
+      repeat j := j - 1 until A[j] <= pivot;
 
       if i >= j then
       begin
@@ -109,8 +110,7 @@ procedure QuickSort(var A: TIntArray);
   var
     pivot: integer;
   begin
-    writeln('q', lo, ' ', hi);
-    if lo = hi then
+    if lo >= hi then
       exit;
 
     pivot := partition(lo, hi);
@@ -121,7 +121,7 @@ procedure QuickSort(var A: TIntArray);
 
 
 begin
-  QuickSortRec(0, 10);
+  QuickSortRec(Low(A), High(A));
 end;
 
 
@@ -132,12 +132,12 @@ end;
 function IsSorted(A: array of integer): boolean;
 var i: integer;
 begin
-  i := 0;
   IsSorted := true;
 
   for i := Low(A) to High(A)-1 do
     if A[i] > A[i+1] then
     begin
+
       IsSorted := false;
       break;
     end;
@@ -161,9 +161,7 @@ var
 begin
   RandomArray(A);     MergeSort(A);   writeln(IsSorted(A));
   RandomArray(A);     BubbleSort(A);  writeln(IsSorted(A));
-  { RandomArray(A);     QuickSort(A);   writeln(IsSorted(A)); }
-  for i:=low(A) to high(A) do write(A[i], ' ');
-
+  RandomArray(A);     QuickSort(A);   writeln(IsSorted(A));
   readln;
 
 end.

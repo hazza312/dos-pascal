@@ -2,3 +2,4 @@ BUILD
 *.BAK
 *.EXE
 *.$$$
+*.OBJ

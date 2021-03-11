@@ -1,29 +1,32 @@
 program Sort;
+uses
+  Misc;
+
+
 type
   TIntArray = array[0..100] of integer;
 
 
+
 procedure BubbleSort(var A: TIntArray);
 var
-  i, j, tmp: integer;
+  i, j: integer;
 
 begin
   for i := Low(A) to High(A) do
-  begin
     for j := Low(A) to High(A) - 1 do
       if A[j] > A[j+1] then
-      begin
-        tmp := A[j];
-        A[j] := A[j+1];
-        A[j+1] := tmp;
-      end;
-  end;
+        Swap(A[j], A[j+1]);
+
 end;
+
 
 
 procedure MergeSort(var A: TIntArray);
 var
   Tmp: TIntArray;
+
+
 
   procedure Merge(lo, mid, hi: integer);
   var
@@ -37,25 +40,35 @@ var
     while out <= hi do
     begin
       if Tmp[i] <= Tmp[j] then
-        begin  A[out] := Tmp[i];  i := i + 1; end
+        begin
+          A[out] := Tmp[i];
+          Inc(i);
+        end
       else
-        begin  A[out] := Tmp[j];  j := j + 1; end;
-
-      out := out + 1;
-
-      while (j > hi) and (i < mid) do
-      begin
-        A[out] := Tmp[i];
-        out := out + 1;
-        i := i + 1;
+        begin
+          A[out] := Tmp[j];
+          Inc(j);
       end;
 
-      while (i >= mid) and (j <= hi) do
-      begin
-        A[out] := Tmp[j];
-        out := out + 1;
-        j := j + 1
-      end;
+      Inc(out);
+
+
+      if j > hi then
+        while i < mid do
+        begin
+          A[out] := Tmp[i];
+          Inc(out);
+          Inc(i);
+        end;
+
+      if i >= mid then
+        while j <= hi do
+        begin
+          A[out] := Tmp[j];
+          Inc(out);
+          Inc(j);
+        end;
+
     end;
   end;
 
@@ -82,27 +95,25 @@ end;
 procedure QuickSort(var A: TIntArray);
   function Partition(lo, hi: integer): integer;
   var
-    pivot, tmp, i, j: integer;
+    pivot, i, j: integer;
 
   begin
     pivot := A[(lo + hi) div 2];
-    i := lo-1; j := hi+1;
+    i := lo-1;
+    j := hi+1;
 
     while true do
     begin
-      repeat i := i + 1 until A[i] >= pivot;
-      repeat j := j - 1 until A[j] <= pivot;
+      repeat Inc(i) until A[i] >= pivot;
+      repeat Dec(j) until A[j] <= pivot;
 
       if i >= j then
-      begin
-        Partition := j;
-        exit;
-      end;
+        break;
 
-      tmp := A[i];
-      A[i] := A[j];
-      A[j] := tmp;
+      Swap(A[i], A[j]);
     end;
+
+    Partition := j;
   end;
 
 
@@ -126,9 +137,6 @@ end;
 
 
 
-
-
-
 function IsSorted(A: array of integer): boolean;
 var i: integer;
 begin
@@ -137,11 +145,11 @@ begin
   for i := Low(A) to High(A)-1 do
     if A[i] > A[i+1] then
     begin
-
       IsSorted := false;
       break;
     end;
 end;
+
 
 
 procedure RandomArray(var A: TIntArray);
@@ -159,9 +167,9 @@ var
   i: integer;
 
 begin
-  RandomArray(A);     MergeSort(A);   writeln(IsSorted(A));
-  RandomArray(A);     BubbleSort(A);  writeln(IsSorted(A));
-  RandomArray(A);     QuickSort(A);   writeln(IsSorted(A));
+  RandomArray(A); MergeSort(A);  writeln('Merge sort: ', IsSorted(A));
+  RandomArray(A); BubbleSort(A); writeln('Bubble sort: ', IsSorted(A));
+  RandomArray(A); QuickSort(A);  writeln('Quicksort: ', IsSorted(A));
   readln;
 
 end.
